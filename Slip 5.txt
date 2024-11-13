@@ -1,0 +1,67 @@
+Q.1) Write a python program to implement Lemmatization using NLTK.
+
+import nltk
+from nltk.stem import WordNetLemmatizer
+from nltk.tokenize import word_tokenize
+from nltk.corpus import wordnet
+
+nltk.download('punkt')
+nltk.download('wordnet')
+
+def get_wordnet_pos(word):
+    """Map POS tag to first character lemmatize() accepts"""
+    tag = nltk.pos_tag([word])[0][1][0].upper()
+    tag_dict = {"N": wordnet.NOUN, "V": wordnet.VERB, "R": wordnet.ADV, "J": wordnet.ADJ}
+    return tag_dict.get(tag, wordnet.NOUN)
+
+def lemmatize_text(text):
+    lemmatizer = WordNetLemmatizer()
+    tokens = word_tokenize(text)
+    lemmatized_tokens = [lemmatizer.lemmatize(word, get_wordnet_pos(word)) for word in tokens]
+    return ' '.join(lemmatized_tokens)
+
+if __name__ == "__main__":
+    # Example usage
+    input_text = "The quick brown foxes are jumping over the lazy dogs"
+    lemmatized_text = lemmatize_text(input_text)
+    
+    print("Original text:", input_text)
+    print("Lemmatized text:", lemmatized_text)
+
+
+Q.2) Write a Python program to implement Breadth First Search algorithm. Refer the following
+graph as an Input for the program.[Initial node=1,Goal node=8] 
+
+
+from collections import deque
+def bfs(graph, start, goal):
+    visited = set()
+    queue = deque([(start, [start])])
+    while queue:
+        current_node, path = queue.popleft()
+        if current_node == goal:
+            return path
+ if current_node not in visited:
+            visited.add(current_node)
+for neighbor in graph.get(current_node, []):
+                if neighbor not in visited:
+                    queue.append((neighbor, path + [neighbor]))
+ return None
+if __name__ == "__main__":
+    graph = {
+        1: [2, 3],
+        2: [1, 4, 5],
+        3: [1, 6, 7],
+        4: [2, 8],
+        5: [2, 8],
+        6: [3, 8],
+        7: [3, 8],
+        8: [4, 5, 6, 7]
+    }
+    initial_node = 1
+    goal_node = 8
+    path = bfs(graph, initial_node, goal_node)
+    if path:
+        print(f"Shortest path from {initial_node} to {goal_node}: {path}")
+    else:
+        print(f"No path from {initial_node} to {goal_node}")

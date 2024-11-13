@@ -1,0 +1,70 @@
+Q.1) Write a Program to Implement Alpha-Beta Pruning using Python.
+
+import math
+def alpha_beta_pruning(state, depth, alpha, beta, maximizing_player):
+    if depth == 0 or is_terminal(state):
+        return evaluate(state)
+    if maximizing_player:
+        value = float('-inf')
+        for child in generate_children(state):
+            value = max(value, alpha_beta_pruning(child, depth - 1, alpha, beta, False))
+            alpha = max(alpha, value)
+            if beta <= alpha:
+                break  # Beta cutoff
+        return value
+    else:
+        value = float('inf')
+        for child in generate_children(state):
+            value = min(value, alpha_beta_pruning(child, depth - 1, alpha, beta, True))
+            beta = min(beta, value)
+            if beta <= alpha:
+                break  # Alpha cutoff
+        return value
+def is_terminal(state):
+    return True
+def evaluate(state):
+    return 0
+def generate_children(state):
+    return []
+if __name__ == "__main__":
+    initial_state = {}  # Replace with your initial state
+    depth = 3  # Set the desired depth of the search tree
+    result = alpha_beta_pruning(initial_state, depth, float('-inf'), float('inf'), True)
+    print(f"Alpha-Beta Pruning Result: {result}")
+
+
+
+
+Q.2) Write a Python program to implement Simple Chatbot[ 20 Marks ]
+
+
+import random
+def simple_chatbot(user_input):
+    greetings = ["hi", "hello", "hey", "greetings", "hola"]
+    goodbyes = ["bye", "goodbye", "see you", "farewell"]
+    questions = ["how are you", "what's up", "how's it going"]
+    responses = {
+        "greeting": ["Hi there!", "Hello!", "Hey!"],
+        "goodbye": ["Goodbye!", "See you later!", "Bye!"],
+        "question": ["I'm doing well, thanks!", "I'm good. How about you?", "All good!"],
+        "default": ["I'm not sure how to respond to that.", "Could you please rephrase that?", "I didn't understand."]
+    }
+    user_input = user_input.lower()
+    if any(word in user_input for word in greetings):
+        return random.choice(responses["greeting"])
+    elif any(word in user_input for word in goodbyes):
+        return random.choice(responses["goodbye"])
+    elif any(word in user_input for word in questions):
+        return random.choice(responses["question"])
+    else:
+        return random.choice(responses["default"])
+if __name__ == "__main__":
+    print("Simple Chatbot: Hello! Type 'bye' to exit.")
+    while True:
+        user_input = input("You: ").strip()
+        if user_input.lower() == 'bye':
+            print("Simple Chatbot: Goodbye!")
+            break
+        response = simple_chatbot(user_input)
+        print("Simple Chatbot:", response)
+

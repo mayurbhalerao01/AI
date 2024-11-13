@@ -1,0 +1,48 @@
+Q.1) Write a python program to remove punctuations from the given string?.
+
+def remove_punctuation(input_string):
+    punctuation_chars = '''!()-[]{};:'"\,<>./?@#$%^&*_~'''
+    translation_table = str.maketrans('', '', punctuation_chars)
+    result_string = input_string.translate(translation_table)
+    return result_string
+input_string = "Hello, world! This is a simple example."
+result = remove_punctuation(input_string)
+print("Original String:", input_string)
+print("String without Punctuation:", result)
+
+
+
+Q.2) Write a Python program to implement Depth First Search algorithm. Refer the following graph
+as an Input for the program.[Initial node=2,Goal node=7]
+
+graph = {
+    1: [2, 3],
+    2: [4, 5],
+    3: [6, 7],
+    4: [],
+    5: [],
+    6: [],
+    7: []
+}
+
+def dfs(current, goal, visited, path):
+    visited.add(current)
+    path.append(current)
+
+    if current == goal:
+        return path
+
+   for neighbor in graph[current]:
+        if neighbor not in visited:
+            new_path = dfs(neighbor, goal, visited, path)
+            if new_path:
+                return new_path
+    path.pop()
+initial_node = 2
+goal_node = 7
+visited_nodes = set()
+result_path = dfs(initial_node, goal_node, visited_nodes, [])
+if result_path:
+    print(f"DFS Path from {initial_node} to {goal_node}: {result_path}")
+else:
+    print(f"No path found from {initial_node} to {goal_node}")

@@ -1,0 +1,91 @@
+Q.1).Write a python program to remove stop words for a given passage from a text file using
+NLTK?. [ 10Marks ]
+
+import nltk
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+import string
+nltk.download('stopwords')
+nltk.download('punkt')
+def remove_stop_words(file_path):
+    with open(file_path, 'r', encoding='utf-8') as file:
+        passage = file.read()
+    words = word_tokenize(passage)
+    words = [word.lower() for word in words if word.isalnum()]
+    stop_words = set(stopwords.words('english'))
+    filtered_words = [word for word in words if word not in stop_words]
+    filtered_passage = ' '.join(filtered_words)
+    return filtered_passage
+if __name__ == "__main__":
+    file_path = input("Enter the path of the text file: ")
+    try:
+        filtered_passage = remove_stop_words(file_path)
+        print("\nOriginal Passage:\n")
+        with open(file_path, 'r', encoding='utf-8') as file:
+            print(file.read())
+        print("\nPassage after removing stop words:\n")
+        print(filtered_passage)
+    except FileNotFoundError:
+        print(f"File not found at path: {file_path}")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+
+Q.2) Implement a system that performs arrangement of some set of objects in a room. Assume that
+you have only 5 rectangular, 4 square-shaped objects. Use A* approach for the placement of
+the objects in room for efficient space utilisation. Assume suitable heuristic, and dimensions of
+objects and rooms. (Informed Search).
+
+
+import heapq
+from typing import List, Tuple
+class State:
+    def __init__(self, room_length, room_width, objects):
+        self.room_length = room_length
+        self.room_width = room_width
+        self.objects = objects
+    def __lt__(self, other):
+        return self.heuristic() < other.heuristic()
+    def is_goal(self):
+        return not self.objects
+   def heuristic(self):
+       used_space = sum([length * width for length, width in self.objects])
+        remaining_space = self.room_length * self.room_width - used_space
+        return remaining_space
+def a_star(initial_state):
+    open_set = [initial_state]
+    closed_set = set()
+    while open_set:
+        current_state = heapq.heappop(open_set)
+        if current_state.is_goal():
+            return current_state
+        closed_set.add(current_state)
+        for new_state in generate_states(current_state):
+            if new_state not in closed_set and new_state not in open_set:
+                heapq.heappush(open_set, new_state)
+    return None
+def generate_states(current_state):
+    states = []
+    for obj in current_state.objects:
+        for i in range(current_state.room_length - obj[0] + 1):
+            for j in range(current_state.room_width - obj[1] + 1):
+                new_objects = [o for o in current_state.objects if o != obj]
+                new_state = State(current_state.room_length, current_state.room_width, new_objects)
+                new_state.objects.append((obj[0], obj[1], i, j))  # Store position as well
+                states.append(new_state)
+    return states
+def print_solution(final_state):
+    print("Final State:")
+    for obj in final_state.objects:
+        print(f"Object {obj[0]}x{obj[1]} placed at position ({obj[2]}, {obj[3]})")
+if __name__ == "__main__":
+    initial_state = State(room_length=10, room_width=8, objects=[
+        (4, 2), (3, 2), (2, 3), (4, 3), (2, 2),
+        (2, 2), (3, 3), (2, 2), (3, 3)
+    ])
+    final_state = a_star(initial_state)
+    if final_state:
+        print_solution(final_state)
+    else:
+        print("No solution found.")
+

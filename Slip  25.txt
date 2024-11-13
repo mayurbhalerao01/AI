@@ -1,0 +1,100 @@
+Q.1). Build a bot which provides all the information related to you in college [10 Marks ]
+
+
+from flask import Flask, request, jsonify
+app = Flask(__name__)
+college_info = {
+    "name": "Your College",
+    "location": "City, Country",
+    "courses": ["Computer Science", "Electrical Engineering", "Business Administration"],
+    "contact_email": "contact@college.edu",
+    "website": "https://www.college.edu",
+}
+@app.route('/get_college_info', methods=['POST'])
+def get_college_info():
+    data = request.get_json()
+    if 'query' in data:
+        query = data['query'].lower()
+        if query == 'all':
+            return jsonify(college_info)
+        elif query in college_info:
+            return jsonify({query: college_info[query]})
+        else:
+            return jsonify({"error": "Invalid query. Available queries: all, name, location, courses, contact_email, website"})
+    else:
+        return jsonify({"error": "Query parameter 'query' is missing."})
+if __name__ == '__main__':
+    app.run(port=5000)
+
+
+
+Q.2) Write a Python program to solve 8-puzzle problem. 
+
+
+from queue import PriorityQueue
+class PuzzleNode:
+    def __init__(self, state, parent=None, move=None, cost=0):
+        self.state = state
+        self.parent = parent
+        self.move = move
+        self.cost = cost
+    def __lt__(self, other):
+        return (self.cost + self.heuristic()) < (other.cost + other.heuristic())
+    def __eq__(self, other):
+        return self.state == other.state
+    def __hash__(self):
+        return hash(tuple(self.state))
+    def heuristic(self):
+        # Manhattan distance heuristic
+        goal = [[0, 1, 2], [3, 4, 5], [6, 7, 8]]
+        h = 0
+        for i in range(3):
+            for j in range(3):
+                value = self.state[i][j]
+                goal_row, goal_col = divmod(value, 3)
+                h += abs(i - goal_row) + abs(j - goal_col)
+        return h
+def get_neighbors(node):
+    neighbors = []
+    zero_row, zero_col = get_zero_position(node.state)
+    for dr, dc in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
+        new_row, new_col = zero_row + dr, zero_col + dc
+        if 0 <= new_row < 3 and 0 <= new_col < 3:
+            new_state = [row[:] for row in node.state]
+            new_state[zero_row][zero_col], new_state[new_row][new_col] = new_state[new_row][new_col], new_state[zero_row][zero_col]
+         neighbors.append(PuzzleNode(new_state, parent=node, move=(zero_row, zero_col)))   
+    return neighbors
+def get_zero_position(state):
+    for i in range(3):
+        for j in range(3):
+            if state[i][j] == 0:
+                return i, j
+def print_solution(solution):
+    moves = []
+    while solution:
+        moves.append(solution.move)
+        solution = solution.parent
+    moves.reverse()
+    for move in moves:
+        print(move)
+def solve_8_puzzle(initial_state):
+    initial_node = PuzzleNode(initial_state)
+    goal_state = PuzzleNode([[1, 2, 3], [4, 5, 6], [7, 8, 0]])
+    visited = set()
+    priority_queue = PriorityQueue()
+    priority_queue.put(initial_node)
+    while not priority_queue.empty():
+        current_node = priority_queue.get()
+        if current_node == goal_state:
+            print("Solution found!")
+            print_solution(current_node)
+            return
+        visited.add(current_node)
+        neighbors = get_neighbors(current_node)
+        for neighbor in neighbors:
+            if neighbor not in visited:
+                priority_queue.put(neighbor)
+    print("No solution found.")
+if __name__ == "__main__":
+    initial_state = [[1, 2, 3], [4, 0, 6], [7, 5, 8]]
+    solve_8_puzzle(initial_state)

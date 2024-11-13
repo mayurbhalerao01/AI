@@ -1,0 +1,51 @@
+Q.1) Python program that demonstrates the hill climbing algorithm to find the maximum of a mathematical function.(For example f(x) = -x^2 + 4x).
+
+def objective_function(x):
+    return -x**2 + 4*x
+def hill_climbing(initial_x, step_size, max_iterations):
+    current_x = initial_x
+    for _ in range(max_iterations):
+        next_x = current_x + step_size
+        if objective_function(next_x) > objective_function(current_x):
+            current_x = next_x
+        else:
+            break
+    return current_x
+Set initial parameters
+initial_guess = 0.0
+step_size = 0.1
+max_iterations = 100
+result = hill_climbing(initial_guess, step_size, max_iterations)
+print(f"Maximum at x = {result}, f(x) = {objective_function(result)}")
+
+
+Q.2) Write a Python program to implement Depth First Search algorithm. Refer the following graph
+as an Input for the program. [Initial node=1,Goal node=8.
+
+def dfs(graph, current, goal, visited):
+    if current == goal:
+        print("Goal node found!")
+        return True
+    visited.add(current)
+    for neighbor in graph.get(current, []):
+        if neighbor not in visited:
+            if dfs(graph, neighbor, goal, visited):
+                return True
+   return False
+if __name__ == "__main__":
+   graph = {
+        1: [2, 3],
+        2: [4, 5],
+        3: [6, 7],
+        4: [8],
+        5: [8],
+        6: [8],
+        7: [8],
+        8: []
+    }
+Set initial and goal nodes
+    initial_node = 1
+    goal_node = 8
+visited_nodes = set()
+    if not dfs(graph, initial_node, goal_node, visited_nodes):
+        print("Goal node not found.")

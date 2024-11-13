@@ -1,0 +1,59 @@
+Q.1) Write a python program to remove stop words for a given passage from a text file using
+NLTK?
+
+
+import nltk
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+def remove_stop_words(input_file, output_file):
+    stop_words = set(stopwords.words('english'))
+    with open(input_file, 'r', encoding='utf-8') as file:
+        passage = file.read()
+    words = word_tokenize(passage)
+    filtered_words = [word for word in words if word.lower() not in stop_words]
+    modified_passage = ' '.join(filtered_words)
+    with open(output_file, 'w', encoding='utf-8') as file:
+        file.write(modified_passage)
+if __name__ == "__main__":
+    input_file = "input.txt"  # Replace with your input file
+    output_file = "output.txt"  # Replace with your output file
+    remove_stop_words(input_file, output_file)
+    print("Stop words removed. Check the output file:", output_file)
+
+
+
+Q.2) Write a Python program to implement Breadth First Search algorithm. Refer the following
+graph as an Input for the program.[Initial node=1,Goal node=8].
+
+from collections import defaultdict, deque
+class Graph:
+    def __init__(self):
+        self.graph = defaultdict(list)
+    def add_edge(self, u, v):
+        self.graph[u].append(v)
+        self.graph[v].append(u) 
+    def bfs(self, start, goal):
+        visited = set()
+        queue = deque([(start, [start])])
+        while queue:
+            current_node, path = queue.popleft()
+            if current_node == goal:
+                return path  # Return the path if the goal is reached
+            if current_node not in visited:
+                visited.add(current_node)
+                for neighbor in self.graph[current_node]:
+                    if neighbor not in visited:
+                        queue.append((neighbor, path + [neighbor]))
+ return None 
+if __name__ == "__main__":
+    graph = Graph()
+    edges = [(1, 2), (1, 3), (2, 4), (2, 5), (3, 6), (3, 7), (4, 8), (5, 8), (6, 8), (7, 8)]
+    for edge in edges:
+        graph.add_edge(*edge)
+initial_node = 1
+    goal_node = 8
+    path = graph.bfs(initial_node, goal_node)
+if path:
+        print(f"Shortest path from {initial_node} to {goal_node}: {path}")
+    else:
+        print(f"No path from {initial_node} to {goal_node}")

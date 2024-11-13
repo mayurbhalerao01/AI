@@ -1,0 +1,38 @@
+Q.1)Write a python program to remove punctuations from the given string?[ 10 Marks ].
+
+import string
+def remove_punctuations(input_string):
+    translator = str.maketrans('', '', string.punctuation)
+    result_string = input_string.translate(translator)
+    return result_string
+if __name__ == "__main__":
+   input_string = "Hello, World! This is an example string with some punctuations!!!"
+result = remove_punctuations(input_string)
+  print("Original String:", input_string)
+    print("String without Punctuations:", result)
+
+
+Q.2)Write a Python program for the following Cryptarithmetic problems. [ 20 Marks ]
+GO + TO = OUT
+
+from itertools import permutations
+def solve_cryptarithmetic():
+    for perm in permutations(range(10), 5):
+        g, o, t, u = perm
+        go = 10 * g + o
+        to = 10 * t + o
+        out = 100 * o + 10 * u + t
+        if go + to == out:
+            return {'G': g, 'O': o, 'T': t, 'U': u}
+    return None
+if __name__ == "__main__":
+    solution = solve_cryptarithmetic()
+    if solution:
+        print("Solution found:")
+        print(f"   {solution['G']} {solution['O']}")
+        print(f" + {solution['T']} {solution['O']}")
+        print(f" ___________")
+        print(f"   {solution['O']} {solution['U']} {solution['T']}")
+    else:
+        print("No solution found.")
+

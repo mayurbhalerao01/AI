@@ -1,0 +1,131 @@
+Q.1)Write a python program implement tic-tac-toe using alpha beeta pruning.
+
+def print_board(board):
+    for row in board:
+        print(" | ".join(row))
+        print("-" * 5)
+
+def is_winner(board, player):
+    return any(all(cell == player for cell in row) for row in board) or \
+           any(all(row[i] == player for row in board) for i in range(3)) or \
+           all(board[i][i] == player for i in range(3)) or \
+           all(board[i][2 - i] == player for i in range(3))
+
+def is_board_full(board):
+    return all(cell != ' ' for row in board for cell in row)
+
+def evaluate(board):
+    return 1 if is_winner(board, 'X') else -1 if is_winner(board, 'O') else 0 if is_board_full(board) else None
+
+def minimax(board, depth, alpha, beta, maximizing_player):
+    score = evaluate(board)
+    if score is not None:
+        return score
+
+    eval_fn = max if maximizing_player else min
+    best_val = float('-inf') if maximizing_player else float('inf')
+
+    for i in range(3):
+        for j in range(3):
+            if board[i][j] == ' ':
+                board[i][j] = 'X' if maximizing_player else 'O'
+                best_val = eval_fn(best_val, minimax(board, depth + 1, alpha, beta, not maximizing_player))
+                board[i][j] = ' '
+                alpha = max(alpha, best_val) if maximizing_player else min(beta, best_val)
+                if beta <= alpha:
+                    break
+
+    return best_val
+
+def find_best_move(board):
+    best_val = float('-inf')
+    best_move = (-1, -1)
+
+    for i in range(3):
+        for j in range(3):
+            if board[i][j] == ' ':
+                board[i][j] = 'X'
+                move_val = minimax(board, 0, float('-inf'), float('inf'), False)
+                board[i][j] = ' '
+                if move_val > best_val:
+                    best_move = (i, j)
+                    best_val = move_val
+
+    return best_move
+
+def main():
+    board = [[' ' for _ in range(3)] for _ in range(3)]
+
+    while True:
+        print_board(board)
+
+        # Player's move
+        row, col = map(int, input("Enter row and column (0, 1, or 2) separated by space: ").split())
+        if board[row][col] == ' ':
+            board[row][col] = 'O'
+        else:
+            print("Cell already taken. Try again.")
+            continue
+
+        # Check if player wins or the board is full
+        if is_winner(board, 'O'):
+            print_board(board)
+            print("You win!")
+            break
+        elif is_board_full(board):
+            print_board(board)
+            print("It's a tie!")
+            break
+
+        # Computer's move
+        print("Computer's move:")
+        row, col = find_best_move(board)
+        board[row][col] = 'X'
+
+        # Check if computer wins or the board is full
+        if is_winner(board, 'X'):
+            print_board(board)
+            print("Computer wins!")
+            break
+        elif is_board_full(board):
+            print_board(board)
+            print("It's a tie!")
+            break
+
+if __name__ == "__main__":
+    main()
+
+
+
+Q.2  Write a Python program to implement Simple Chatbot.
+
+import random
+def get_response(user_input):
+    responses = {
+        "hello": "Hi there! How can I help you?",
+        "how are you": "I'm just a computer program, but I'm doing well. Thanks for asking!",
+        "bye": "Goodbye! Have a great day!",
+        "default": "I'm not sure how to respond. Can you ask me something else?"
+    }
+
+    user_input_lower = user_input.lower()
+
+    if user_input_lower in responses:
+        return responses[user_input_lower]
+    else:
+        return responses["default"]
+
+def main():
+    print("Simple Chatbot: Hello! Type 'bye' to exit.")
+
+    while True:
+        user_input = input("You: ")
+        if user_input.lower() == 'bye':
+            print("Simple Chatbot: Goodbye!")
+            break
+
+        response = get_response(user_input)
+        print("Simple Chatbot:", response)
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,90 @@
+Q.1)Write a program to implement Hangman game using python. [10 Marks]
+Description:
+Hangman is a classic word-guessing game. The user should guess the word correctly by
+entering alphabets of the user choice. The Program will get input as single alphabet from the
+user and it will matchmaking with the alphabets in the original 
+
+
+import random
+def hangman():
+    words = ["python", "hangman", "programming", "computer", "science", "algorithm"]
+    secret_word = random.choice(words)
+    guessed_letters = set()
+    incorrect_attempts = 0
+    max_attempts = 6
+while incorrect_attempts < max_attempts:
+        current_display = ''.join(letter if letter in guessed_letters else '_' for letter in secret_word)
+        print(f"Word: {current_display}")
+        print(f"Incorrect Attempts: {incorrect_attempts}/{max_attempts}")
+    if '_' not in current_display:
+            print(f"Congratulations! You guessed the word: {secret_word}")
+            return
+  guess = input("Enter a letter: ").lower()
+
+        if not guess.isalpha() or len(guess) != 1:
+            print("Please enter a single alphabet.")
+            continue
+
+        if guess in guessed_letters:
+            print("You've already guessed that letter. Try again.")
+            continue
+
+        guessed_letters.add(guess)
+
+        if guess not in secret_word:
+            print("Incorrect guess!")
+            incorrect_attempts += 1
+
+    print(f"Sorry, you've run out of attempts. The correct word was: {secret_word}")
+
+if __name__ == "__main__":
+    hangman()
+
+
+
+Q.2) Write a Python program to implement Breadth First Search algorithm. Refer the following
+graph as an Input for the program.[Initial node=1,Goal node=8]
+
+from collections import deque
+class Graph:
+    def __init__(self):
+        self.graph = {}
+    def add_edge(self, node, neighbor):
+        if node not in self.graph:
+            self.graph[node] = []
+       self.graph[node].append(neighbor)
+def bfs(graph, start, goal):
+    visited = set()
+    queue = deque([[start]])
+  while queue:
+        path = queue.popleft()
+        node = path[-1]
+        if node in visited:
+            continue
+        neighbors = graph[node]
+        for neighbor in neighbors:
+            new_path = list(path)
+            new_path.append(neighbor)
+            queue.append(new_path)
+            if neighbor == goal:
+                return new_path
+        visited.add(node)
+    return None
+graph = Graph()
+graph.add_edge(1, 2)
+graph.add_edge(1, 3)
+graph.add_edge(2, 4)
+graph.add_edge(2, 5)
+graph.add_edge(3, 6)
+graph.add_edge(3, 7)
+graph.add_edge(4, 8)
+graph.add_edge(5, 8)
+initial_node = 1
+goal_node = 8
+result_path = bfs(graph.graph, initial_node, goal_node)
+if result_path:
+    print(f"BFS Path from {initial_node} to {goal_node}: {result_path}")
+else:
+    print(f"No path found from {initial_node} to {goal_node}")
+
+

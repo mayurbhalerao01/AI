@@ -1,0 +1,106 @@
+Q.1) Write python program to solve 8 puzzle problem using A* algorithm [10 marks].
+
+import heapq
+class PuzzleNode:
+    def __init__(self, state, parent=None, move=""):
+        self.state = state
+        self.parent = parent
+        self.move = move
+        self.cost = 0 if parent is None else parent.cost + 1
+    def __lt__(self, other):
+        return (self.cost + self.heuristic()) < (other.cost + other.heuristic())
+    def __eq__(self, other):
+        return self.state == other.state
+    def __hash__(self):
+        return hash(tuple(self.state))
+    def is_goal(self):
+        return self.state == (1, 2, 3, 8, 0, 4, 7, 6, 5)
+ def heuristic(self):
+        return sum(abs(a - b) for a, b in ((i, (i - 1) % 3 + 3 * ((i - 1) // 3)) for i in self.state if i != 0))
+def get_possible_moves(state):
+    zero_index = state.index(0)
+    row, col = zero_index // 3, zero_index % 3
+    moves = [('U', zero_index - 3), ('D', zero_index + 3), ('L', zero_index - 1), ('R', zero_index + 1)]
+    return [(move, new_zero_index) for move, new_zero_index in moves if 0 <= new_zero_index <= 8]
+def a_star(initial_state):
+    initial_node = PuzzleNode(initial_state)
+    heap = [initial_node]
+    heapq.heapify(heap)
+    visited = set()
+    while heap:
+        current_node = heapq.heappop(heap)
+        if current_node.is_goal():
+            return current_node
+        if current_node in visited:
+            continue
+        visited.add(current_node)
+        for move, new_zero_index in get_possible_moves(current_node.state):
+            new_state = list(current_node.state)
+            new_state[current_node.state.index(0)], new_state[new_zero_index] = new_state[new_zero_index], new_state[current_node.state.index(0)]
+            new_node = PuzzleNode(tuple(new_state), current_node, move)
+            heapq.heappush(heap, new_node)
+    return None
+def print_solution(solution_node):
+    moves = [node.move for node in solution_node.path()[1:]] if solution_node else []
+    print(" ".join(moves))
+
+if __name__ == "__main__":
+    initial_state = (1, 2, 3, 8, 0, 4, 7, 6, 5)
+    solution_node = a_star(initial_state)
+    print_solution(solution_node)
+
+
+
+
+Q.2) Write a Python program to solve water jug problem. 2 jugs with capacity 5 gallon and 7 gallon
+are given with unlimited water supply respectively. The target to achieve is 4 gallon of water in
+second jug.
+
+
+
+class WaterJugProblem:
+    def __init__(self, jug1_capacity, jug2_capacity, target):
+        self.jug1_capacity = jug1_capacity
+        self.jug2_capacity = jug2_capacity
+        self.target = target
+        self.visited_states = set()
+    def is_valid_state(self, state):
+        jug1, jug2 = state
+        return 0 <= jug1 <= self.jug1_capacity and 0 <= jug2 <= self.jug2_capacity
+    def is_goal_state(self, state):
+        return state[1] == self.target
+  def get_successors(self, state):
+        jug1, jug2 = state
+        successors = []
+        successors.append((self.jug1_capacity, jug2))
+        successors.append((jug1, self.jug2_capacity))
+        successors.append((0, jug2))
+        successors.append((jug1, 0))
+        pour_to_jug2 = min(jug1, self.jug2_capacity - jug2)
+        successors.append((jug1 - pour_to_jug2, jug2 + pour_to_jug2))
+        pour_to_jug1 = min(jug2, self.jug1_capacity - jug1)
+        successors.append((jug1 + pour_to_jug1, jug2 - pour_to_jug1))
+        return [s for s in successors if self.is_valid_state(s)]
+    def solve(self):
+        initial_state = (0, 0)
+        if not self.is_valid_state(initial_state):
+            print("Invalid initial state.")
+            return None
+        stack = [initial_state]
+        while stack:
+            current_state = stack.pop()
+            if current_state in self.visited_states:
+                continue
+            self.visited_states.add(current_state)
+            if self.is_goal_state(current_state):
+                return current_state
+            successors = self.get_successors(current_state)
+            stack.extend(successors)
+        return None
+if __name__ == "__main__":
+    jug_problem = WaterJugProblem(5, 7, 4)
+    solution = jug_problem.solve()
+    if solution:
+        print(f"Solution found: {solution}")
+    else:
+        print("No solution found.")

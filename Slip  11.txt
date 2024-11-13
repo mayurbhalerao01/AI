@@ -1,0 +1,76 @@
+Q.1) Write a python program using mean end analysis algorithmproblem of transforming a string of
+lowercase letters into another string.
+
+
+def mean_end_analysis(start, goal):
+    current_state = list(start)
+    goal_state = list(goal)
+    steps = 0
+    while current_state != goal_state:
+        for i in range(len(current_state)):
+            if current_state[i] != goal_state[i]:
+                print(f"Change character at position {i + 1} from '{current_state[i]}' to '{goal_state[i]}'")
+                current_state[i] = goal_state[i]
+        steps += 1
+    print(f"Transformation completed in {steps} steps.")
+if __name__ == "__main__":
+    start_string = input("Enter the starting string: ").lower()
+    goal_string = input("Enter the goal string: ").lower()
+    if len(start_string) != len(goal_string):
+        print("Strings must be of the same length.")
+    else:
+        mean_end_analysis(start_string, goal_string)
+
+
+
+Q.2) Write a Python program to solve water jug problem. Two jugs with capacity 4 gallon and 3
+gallon are given with unlimited water supply respectively. The target is to achieve 2 gallon of
+water in second jug.
+
+
+class WaterJugProblem:
+    def __init__(self, jug1_capacity, jug2_capacity, target):
+        self.jug1_capacity = jug1_capacity
+        self.jug2_capacity = jug2_capacity
+        self.target = target
+        self.visited_states = set()
+    def is_valid_state(self, state):
+        jug1, jug2 = state
+        return 0 <= jug1 <= self.jug1_capacity and 0 <= jug2 <= self.jug2_capacity
+    def is_goal_state(self, state):
+        return state[1] == self.target
+    def get_successors(self, state):
+        jug1, jug2 = state
+        successors = []
+        successors.append((self.jug1_capacity, jug2))
+        successors.append((jug1, self.jug2_capacity))
+        successors.append((0, jug2))
+        successors.append((jug1, 0))
+        pour_to_jug2 = min(jug1, self.jug2_capacity - jug2)
+        successors.append((jug1 - pour_to_jug2, jug2 + pour_to_jug2))
+        pour_to_jug1 = min(jug2, self.jug1_capacity - jug1)
+        successors.append((jug1 + pour_to_jug1, jug2 - pour_to_jug1))
+        return [s for s in successors if self.is_valid_state(s)]
+    def solve(self):
+        initial_state = (0, 0)
+        if not self.is_valid_state(initial_state):
+            print("Invalid initial state.")
+            return None
+        stack = [initial_state]
+        while stack:
+            current_state = stack.pop()
+            if current_state in self.visited_states:
+                continue
+            self.visited_states.add(current_state)
+            if self.is_goal_state(current_state):
+                return current_state
+            successors = self.get_successors(current_state)
+            stack.extend(successors)
+        return None
+if __name__ == "__main__":
+    jug_problem = WaterJugProblem(4, 3, 2)
+    solution = jug_problem.solve()
+    if solution:
+        print(f"Solution found: {solution}")
+    else:
+        print("No solution found.")

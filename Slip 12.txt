@@ -1,0 +1,59 @@
+Q.1) Write a python program to generate Calendar for the given month and year?. [ 10Marks ]
+
+import calendar
+def generate_calendar(year, month):
+    cal = calendar.monthcalendar(year, month)
+    print(f"Calendar for {calendar.month_name[month]} {year}:\n")
+    print("Mo Tu We Th Fr Sa Su")
+    for week in cal:
+        for day in week:
+            if day == 0:
+                print("   ", end=" ")
+            else:
+                print(f"{day:2} ", end=" ")
+        print()
+if __name__ == "__main__":
+    year = int(input("Enter the year: "))
+    month = int(input("Enter the month (1-12): "))
+    if 1 <= month <= 12:
+        generate_calendar(year, month)
+    else:
+        print("Invalid month. Please enter a month between 1 and 12.")
+
+
+
+Q.2)Write a Python program to simulate 4-Queens problem.
+
+
+
+def is_safe(board, row, col):
+    if any(board[row]):
+        return False
+    if any(board[i][col] for i in range(len(board))):
+        return False
+    if any(board[i][j] for i, j in zip(range(row, -1, -1), range(col, -1, -1))):
+        return False
+if any(board[i][j] for i, j in zip(range(row, -1, -1), range(col, len(board)))):
+        return False
+    return True
+def solve_n_queens(board, row):
+    if row == len(board):
+        return True  
+    for col in range(len(board)):
+        if is_safe(board, row, col):
+            board[row][col] = 1
+            if solve_n_queens(board, row + 1):
+                return True 
+            board[row][col] = 0  
+def print_board(board):
+    for row in board:
+        print(' '.join('Q' if cell else '.' for cell in row))
+if __name__ == "__main__":
+    board_size = 4
+    chessboard = [[0] * board_size for _ in range(board_size)]
+    if solve_n_queens(chessboard, 0):
+        print("Solution found:")
+        print_board(chessboard)
+    else:
+        print("No solution found.")
+

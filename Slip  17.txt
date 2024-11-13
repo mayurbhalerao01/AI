@@ -1,0 +1,55 @@
+Q.1) Python program that demonstrates the hill climbing algorithm to find the maximum of a
+mathematical function.
+
+def objective_function(x):
+    return -(x ** 2)
+def hill_climbing(initial_position, step_size, max_iterations):
+    current_position = initial_position
+    for _ in range(max_iterations):
+        current_value = objective_function(current_position)
+        neighboring_positions = [current_position + step_size, current_position - step_size]
+        next_position = max(neighboring_positions, key=objective_function)
+        next_value = objective_function(next_position)
+        if next_value > current_value:
+            current_position = next_position
+        else:
+            break
+    return current_position, objective_function(current_position)
+if __name__ == "__main__":
+    initial_position = float(input("Enter initial position: "))
+    step_size = float(input("Enter step size: "))
+    max_iterations = int(input("Enter maximum number of iterations: "))
+    max_position, max_value = hill_climbing(initial_position, step_size, max_iterations)
+    print(f"Maximum value found at position {max_position} with value {max_value}.")
+
+
+Q.2) Write a Python program to implement A* algorithm. Refer the following graph as an Input for
+the program.[ Start vertex is A and Goal Vertex is G].
+
+import heapq
+class Graph:
+    def __init__(self):
+        self.graph = {}
+    def add_edge(self, start, end, cost):
+        if start not in self.graph:
+            self.graph[start] = []
+        self.graph[start].append((end, cost))
+    def astar(self, start, goal):
+        open_set = [(0, start, [])]
+        closed_set = set()
+        while open_set:
+            current_cost, current_node, current_path = heapq.heappop(open_set)
+            if current_node == goal:
+                return current_path + [current_node]
+            if current_node in closed_set:
+                continue
+            closed_set.add(current_node)
+            for neighbor, cost in self.graph.get(current_node, []):
+                if neighbor not in closed_set:
+                    heapq.heappush(open_set, (current_cost + cost + heuristic(neighbor, goal), neighbor, current_path + [current_node]))
+        return None
+def heuristic(node, goal):
+    coordinates = {
+        'A': (0, 0),
+        'B': (1, 2),
+        'C': (2

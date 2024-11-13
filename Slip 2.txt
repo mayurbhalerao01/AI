@@ -1,0 +1,58 @@
+Q.1) Write a python program to generate Calendar for the given month and year?
+
+import calendar
+def generate_calendar():
+    # Get input for month and year
+    year = int(input("Enter the year: "))
+    month = int(input("Enter the month: "))
+
+    # Validate input
+    if 1 <= month <= 12:
+        # Generate and print the calendar
+        cal = calendar.monthcalendar(year, month)
+        month_name = calendar.month_name[month]
+
+        print(f"\nCalendar for {month_name} {year}:\n")
+        print("Mo Tu We Th Fr Sa Su")
+        for week in cal:
+            for day in week:
+                if day == 0:
+                    print("   ", end=" ")
+                else:
+                    print(f"{day:2} ", end=" ")
+            print()
+    else:
+        print("Invalid month. Please enter a month between 1 and 12.")
+if __name__ == "__main__":
+    generate_calendar()
+
+
+Q.2) Write a Python program to implement Depth First Search algorithm. Refer the following graph
+as an Input for the program.[Initial node=1,Goal node=7].
+
+
+def dfs(graph, current, goal, visited):
+    if current == goal:
+        print("Goal node found!")
+        return True
+    visited.add(current)
+    for neighbor in graph.get(current, []):
+        if neighbor not in visited:
+            if dfs(graph, neighbor, goal, visited):
+                return True
+    return False
+graph = {
+    1: [2, 3],
+    2: [4, 5],
+    3: [6, 7],
+    4: [],
+    5: [],
+    6: [],
+    7: []
+}
+initial_node = 1
+goal_node = 7
+visited_nodes = set()
+if not dfs(graph, initial_node, goal_node, visited_nodes):
+    print("Goal node not found.")
+

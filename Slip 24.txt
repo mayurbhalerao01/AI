@@ -1,0 +1,38 @@
+Q.1)Write a python program to sort the sentence in alphabetical order?
+
+
+def sort_sentence_alphabetically(sentence):
+    words = sentence.split()
+    sorted_words = sorted(words)
+    sorted_sentence = ' '.join(sorted_words)
+    return sorted_sentence
+
+if __name__ == "__main__":
+    input_sentence = input("Enter a sentence: ")
+    sorted_sentence = sort_sentence_alphabetically(input_sentence)
+    print("Sorted Sentence:", sorted_sentence)
+
+
+Q.2) Write a Python program for the following Cryptorithmetic problems
+CROSS+ROADS = DANGER
+
+from itertools import permutations
+def solve_cryptarithmetic():
+    for perm in permutations(range(10), 8):
+        c, r, o, s, a, d, n, g, e = perm
+        cross = 10000 * c + 1000 * r + 100 * o + 10 * s + s
+        roads = 10000 * r + 1000 * o + 100 * a + 10 * d + s
+        danger = 100000 * d + 10000 * a + 1000 * n + 100 * g + 10 * e + r
+        if cross + roads == danger:
+            return {'C': c, 'R': r, 'O': o, 'S': s, 'A': a, 'D': d, 'N': n, 'G': g, 'E': e}
+    return None
+if __name__ == "__main__":
+    solution = solve_cryptarithmetic()
+    if solution:
+        print("Solution found:")
+        print(f"  {solution['C']} {solution['R']} {solution['O']} {solution['S']} {solution['S']}")
+        print(f" +{solution['R']} {solution['O']} {solution['A']} {solution['D']} {solution['S']}")
+        print(" --------------------")
+        print(f" {solution['D']} {solution['A']} {solution['N']} {solution['G']} {solution['E']} {solution['R']}")
+    else:
+        print("No solution found.")

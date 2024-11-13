@@ -1,0 +1,41 @@
+Q.1) Write a Python program to accept a string. Find and print the number of upper case alphabets and lower case alphabets.
+
+
+def count_upper_lower(string):
+    upper_count = 0
+    lower_count = 0
+    for char in string:
+        if char.isupper():
+            upper_count += 1
+        elif char.islower():
+            lower_count += 1
+    return upper_count, lower_count
+def main():
+    user_input = input("Enter a string: ")
+    upper_count, lower_count = count_upper_lower(user_input)
+    print("Number of uppercase alphabets:", upper_count)
+    print("Number of lowercase alphabets:", lower_count)
+if __name__ == "__main__":
+    main()
+
+
+Q.2) Write a Python program to solve tic-tac-toe problem.
+
+
+def print_board(board):
+    for row in board:
+        print(" | ".join(row))
+        print("-" * 5)
+def check_winner(board):
+    for row in board:
+        if all(cell == row[0] for cell in row) and row[0] != ' ':
+            return True
+    for col in range(3):
+        if all(board[row][col] == board[0][col] for row in range(3)) and board[0][col] != ' ':
+            return True
+    if all(board[i][i] == board[0][0] for i in range(3)) and board[0][0] != ' ':
+        return True
+    if all(board[i][2 - i] == board[0][2] for i
+
+
+

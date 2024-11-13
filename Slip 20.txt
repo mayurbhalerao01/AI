@@ -1,0 +1,118 @@
+Q.1) Build a bot which provides all the information related to you in college [ 10Marks ]
+
+
+import logging
+from telegram import Update
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+college_name = "Your College Name"
+location = "City, Country"
+courses_offered = ["Computer Science", "Electrical Engineering", "Business Administration"]
+contact_email = "contact@college.edu"
+def start(update: Update, context: CallbackContext) -> None:
+    update.message.reply_text(f"Hi! I'm your college information bot. Ask me anything about {college_name}!")
+def info(update: Update, context: CallbackContext) -> None:
+    update.message.reply_text(
+        f"{college_name}\nLocation: {location}\nCourses Offered: {', '.join(courses_offered)}\nContact Email: {contact_email}"
+    )
+def echo(update: Update, context: CallbackContext) -> None:
+    update.message.reply_text("I'm sorry, I can only provide information about the college. Use the /info command.")
+def main() -> None:
+    updater = Updater("YOUR_TELEGRAM_BOT_TOKEN")
+    dp = updater.dispatcher
+    dp.add_handler(CommandHandler("start", start))
+    dp.add_handler(CommandHandler("info", info))
+    dp.add_handler(MessageHandler(Filters.text & ~Filters.command, echo))
+    updater.start_polling()
+    updater.idle()
+if __name__ == '__main__':
+    main()
+
+
+Q.2) Write a Python program to implement Mini-Max Algorithm.
+
+def print_board(board):
+    for row in board:
+        print(' | '.join(row))
+        print('-' * 9)
+
+def is_winner(board, player):
+    # Check rows, columns, and diagonals for a win
+    for i in range(3):
+        if all(cell == player for cell in board[i]) or all(board[j][i] == player for j in range(3)):
+            return True
+    return all(board[i][i] == player for i in range(3)) or all(board[i][2 - i] == player for i in range(3))
+
+sdef is_board_full(board):
+    return all(cell != ' ' for row in board for cell in row)
+
+def minimax(board, depth, is_maximizing):
+    if is_winner(board, 'X'):
+        return 1
+    elif is_winner(board, 'O'):
+        return -1
+    elif is_board_full(board):
+        return 0
+    if is_maximizing:
+        max_eval = float('-inf')
+        for i in range(3):
+            for j in range(3):
+                if board[i][j] == ' ':
+                    board[i][j] = 'X'
+                    eval = minimax(board, depth + 1, False)
+                    board[i][j] = ' '
+                    max_eval = max(max_eval, eval)
+        return max_eval
+    else:
+        min_eval = float('inf')
+        for i in range(3):
+            for j in range(3):
+                if board[i][j] == ' ':
+                    board[i][j] = 'O'
+                    eval = minimax(board, depth + 1, True)
+                    board[i][j] = ' '
+                    min_eval = min(min_eval, eval)
+        return min_eval
+def find_best_move(board):
+    best_val = float('-inf')
+    best_move = (-1, -1)
+    for i in range(3):
+        for j in range(3):
+            if board[i][j] == ' ':
+                board[i][j] = 'X'
+                move_val = minimax(board, 0, False)
+                board[i][j] = ' '
+                if move_val > best_val:
+                    best_move = (i, j)
+                    best_val = move_val
+    return best_move
+if __name__ == "__main__":
+    board = [[' ' for _ in range(3)] for _ in range(3)]
+    print("Initial Board:")
+    print_board(board)
+    while True:
+        row = int(input("Enter row (0, 1, or 2): "))
+        col = int(input("Enter column (0, 1, or 2): "))
+        if board[row][col] == ' ':
+            board[row][col] = 'O'
+            print("Player's Move:")
+            print_board(board)
+        else:
+            print("Invalid move! Cell already taken. Try again.")
+            continue
+        if is_winner(board, 'O'):
+            print("Player wins!")
+            break
+        if is_board_full(board):
+            print("It's a draw!")
+            break
+        ai_move = find_best_move(board)
+        board[ai_move[0]][ai_move[1]] = 'X'
+        print("AI's Move:")
+        print_board(board)
+        if is_winner(board, 'X'):
+            print("AI wins!")
+            break
+if is_board_full(board):
+            print("It's a draw!")
+            break
